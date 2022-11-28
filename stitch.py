@@ -7,6 +7,7 @@ image_folder = "test_images"
 images = []
 for i in os.listdir(image_folder):
     image = cv2.imread(f'{image_folder}/{i}')
+    # image = cv2.resize(image, (320, 240))
     images.append(image)
 print(len(images))
 
@@ -18,5 +19,5 @@ else:
     print("Stitch Failed")
 
 cv2.imwrite("result_image/stitch.jpg", result)
-
+print(result.shape)
 cv2.waitKey(0)
