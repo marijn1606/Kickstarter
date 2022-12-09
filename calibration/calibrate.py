@@ -11,7 +11,7 @@ objp[:, :2] = np.mgrid[0:15, 0:10].T.reshape(-1, 2)
 # Arrays to store object points and image points from all the images.
 objpoints = []  # 3d point in real world space
 imgpoints = []  # 2d points in image plane.
-images = glob.glob("calibration/*.jpeg")
+images = glob.glob("cal_img_*.jpeg")
 print(len(images))
 for fname in images:
     img = cv.imread(fname)
@@ -27,7 +27,7 @@ for fname in images:
         # Draw and display the corners
         cv.drawChessboardCorners(img, (15, 10), corners2, ret)
         cv.imshow('img', img)
-        cv.waitKey(200)
+        cv.waitKey(500)
     else:
         print("No corners found")
 cv.destroyAllWindows()
@@ -35,17 +35,32 @@ cv.destroyAllWindows()
 ret, mtx, dist, rvecs, tvecs = cv.calibrateCamera(
     objpoints, imgpoints, gray.shape[::-1], None, None)
 
+distorted_image = cv.imread("test_image.jpeg")
+# distorted_image = cv.resize(distorted_image, (1640, 1232))
+h, w = distorted_image.shape[:2]
+print(h, w)
+new_camera_matrix, roi = cv.getOptimalNewCameraMatrix(
+    mtx, dist, (w, h), 1, (w, h))
+
+undistorted_image = cv.undistort(
+    distorted_image, mtx, dist, None, new_camera_matrix)
+cv.imshow("dist", distorted_image)
+cv.imshow("undist", undistorted_image)
+cv.waitKey(0)
+
 print("Camera matrix : \n")
 print(mtx)
 print("dist : \n")
 print(dist)
-print("rvecs : \n")
-print(rvecs)
-print("tvecs : \n")
-print(tvecs)
+print("New camera matrix : \n")
+print(new_camera_matrix)
+# print("rvecs : \n")
+# print(rvecs)
+# print("tvecs : \n")
+# print(tvecs)
 
-with open("calibration/matrix.txt", 'w') as f:
-    f.write("Camera matrix : \n")
-    f.write(np.array2string(mtx))
-    f.write("\n\ndist : \n")
-    f.write(np.array2string(dist))
+# with open("matrix.txt", 'w') as f:
+#     f.write("Camera matrix : \n")
+#     f.write(np.array2string(mtx))
+#     f.write("\n\ndist : \n")
+#     f.write(np.array2string(dist))
