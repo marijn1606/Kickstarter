@@ -27,7 +27,7 @@ for fname in images:
         # Draw and display the corners
         cv.drawChessboardCorners(img, (15, 10), corners2, ret)
         cv.imshow('img', img)
-        cv.waitKey(500)
+        cv.waitKey(100)
     else:
         print("No corners found")
 cv.destroyAllWindows()
@@ -44,8 +44,15 @@ new_camera_matrix, roi = cv.getOptimalNewCameraMatrix(
 
 undistorted_image = cv.undistort(
     distorted_image, mtx, dist, None, new_camera_matrix)
+
+cv.namedWindow("dist", cv.WINDOW_NORMAL)
+cv.resizeWindow("dist", 1280, 720)
 cv.imshow("dist", distorted_image)
+
+cv.namedWindow("undist", cv.WINDOW_NORMAL)
+cv.resizeWindow("undist", 1280, 720)
 cv.imshow("undist", undistorted_image)
+
 cv.waitKey(0)
 
 print("Camera matrix : \n")
