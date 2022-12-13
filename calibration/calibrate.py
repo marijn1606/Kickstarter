@@ -15,7 +15,7 @@ images = glob.glob("cal_img_*.jpeg")
 print(len(images))
 for fname in images:
     img = cv.imread(fname)
-    img = cv.resize(img, (1640, 1232))
+    # img = cv.resize(img, (1640, 1232))
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     # Find the chess board corners
     ret, corners = cv.findChessboardCorners(gray, (15, 10), None)
